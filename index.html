@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./assets/favicon.ico" rel="shortcut icon" />
   <link rel="stylesheet" href="style.css">
   <link href="./assets/favicon.ico" rel="shortcut icon" />
   <title>Тренажер HTML</title>
 </head>
+
 <body>
   <div class="wrapper">
     <header>
@@ -14,27 +17,46 @@
       <h1>Тренажер HTML</h1>
     </header>
     <main>
-      <section class="time">
-      </section>
-      <section class="question">
-        <h3>Вопрос: <span class="question_number"></span></h3>
-        <p class="description"></p>
+      <div class="question">
+        <div class="question_information">
+          <div class="question_clock">
+            <p>
+              Оставшееся время:
+            </p>
+            <span class="time" id="time">
+              01:00
+            </span>
+          </div>
+          <div>
+            <p>Номер вопроса: <span class="question_number">-</span></p>
+          </div>
+        </div>
+        <h5>Вопрос:</h5>
+        <i>
+          <p class="description">Если готовы отвечать, нажмите Старт</p>
+        </i>
         <label>
           Введите правильный ответ:
-          <input type="text">
+          <input type="text" id="answer">
         </label>
-        <button class="button">Проверить</button>
-      </section>
+        <button class="button" id="check">Проверить</button>
+      </div>
+      <div class="wrapper_controllers">
+        <button class="start button" id="start">Старт</button>
+        <button class="revert button" id="revert">Заново</button>
+      </div>
     </main>
     <footer>
       <ul class="footer_list">
         <li><img class="footer_logo" src="./assets/img/white_on_trans.png" alt="logo"></li>
         <li>2025</li>
         <li>Sergey Lesnevsky</li>
-        <li><a href="https://github.com/Sergey-Lesnevskiy/trainer_html.git">GIT</a></li>
+        <li><a href="https://github.com/Sergey-Lesnevskiy/trainer_html.git\`">GIT</a></li>
         <li>&copy;</li>
       </ul>
     </footer>
   </div>
+  <script src="./index.js"></script>
 </body>
+
 </html>

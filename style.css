@@ -119,6 +119,9 @@ footer {
 .wrapper_controllers> button:first-child{
   margin-right: 10px;
 }
-.answer{
-  border: none;
+#answer:focus,
+#answer:active
+{
+  border: 1px solid black;
+  outline: none;
 }

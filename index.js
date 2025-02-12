@@ -1,21 +1,30 @@
-
-
-// timer
 let timerId;
 const checkButtonQuestion = document.getElementById('check');
 const startButton = document.getElementById('start');
 
 let time = document.getElementById('time');
 let answer = document.getElementById('answer');
-
-
+const pathJSON = './assets/data.JSON';
+const questionText = document.querySelector('.description');
+const questionNumberHTML = document.querySelector('.question_number');
+let unswearText;
+let questionNumberStop = questionNumberHTML.innerHTML;
+let questionNumber = 0;
+let dataState;
+// timer
 let newDate;
-function startTime() {
+async function startTime() {
   newDate = Date.parse(new Date()) + (60 * 1000);
   initializeClock('time', newDate);
   startButton.removeEventListener('click', startTime);
+  answer.disabled = false;
   getQuestion(pathJSON);
-  checkButtonQuestion.addEventListener('click', changeQuestion)
+  checkButtonQuestion.addEventListener('click', changeQuestion);
+  answer.addEventListener('keydown', (e)=>{
+    if (e.key =="Enter") {
+      changeQuestion();
+    } 
+  })
 }
 startButton.addEventListener('click', startTime);
 function getTimeRemaining(endtime) {
@@ -42,6 +51,7 @@ function initializeClock(id, endtime) {
       `${minute}:${seconds}`
     if (t.total <= 0) {
       clearInterval(timeinterval);
+      looseTest();
       clock.innerHTML =
         `время вышло`
     }
@@ -49,39 +59,38 @@ function initializeClock(id, endtime) {
 }
 // timer
 // check question
-const pathJSON = './assets/data.JSON';
-const questionText = document.querySelector('.description');
-const questionNumberHTML = document.querySelector('.question_number');
-let unswearText;
-let questionNumberStop = questionNumberHTML.innerHTML;
-let questionNumber = 0;
+function shuffleArray(arr) {
+  return arr.sort(function (a, b) {
+    return Math.random() - 0.5;
+  });
+}
 function dataQuestion(data) {
-  if (questionNumber) {
-    if (answer.value == data[questionNumber - 1].tag) {
-      answer.value = '';
-      questionNumber >= data.length ? (questionNumber = 0) : questionText.innerHTML = data[questionNumber].description; questionNumberHTML.innerHTML = questionNumber + 1;
-    } else {
-      answer.style.borderColor = "red";
-      answer.style.borderStyle = "solid";
-      questionNumber = questionNumberStop;
-    };
-  } else {
-    questionNumber >= data.length ? (questionNumber = 0) : questionText.innerHTML = data[questionNumber].description; questionNumberHTML.innerHTML = questionNumber + 1;
-  }
-
+    questionNumber >= data.length ? (questionNumber = 0) : questionText.innerHTML = data[questionNumber-1].description; questionNumberHTML.innerHTML = questionNumber;
+  
 }
 function getQuestion(path) {
   fetch(path)
     .then(res => res.json())
-    .then(data => dataQuestion(data))
-    .catch((err) => {
-      questionText.innerHTML = 'проблемы c загрузкой вопросов'
-    });
+    // .then(data => dataQuestion(data))
+    .then(data =>{ 
+      dataState =shuffleArray(data);
+      questionNumber++;
+      dataQuestion(dataState);
+    })
 }
 
 function changeQuestion() {
-  getQuestion(pathJSON);
-  questionNumber++;
+  // if (questionNumber) {
+    if (answer.value == dataState[questionNumber- 1].tag) {
+      answer.value = '';
+      questionNumber++;
+      dataQuestion(dataState);
+      answer.style.borderColor = "black";
+    } else {
+      answer.style.borderColor = "red";
+      answer.style.borderStyle = "solid";
+      answer.style.borderWidth = "2px";
+    };
 }
 
 
@@ -89,3 +98,12 @@ function changeQuestion() {
 // revert test
 document.getElementById('revert').addEventListener('click', () => location.reload())
 // revert test
+// loose test
+function looseTest() {
+  questionText.innerHTML = `Время закончилось, вы не успели ответить на все вопросы((<br> 
+  Попробуйте пройти тест заново<br>
+  Ваш результат: ${questionNumber} из ${dataState.length}`;
+  answer.disabled = true;
+  checkButtonQuestion.removeEventListener('click', changeQuestion);
+}
+// loose test
